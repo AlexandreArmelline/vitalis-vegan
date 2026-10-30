@@ -33,6 +33,9 @@ yarn-error.log*
 # 1.6 Documentos gerados
 documents/
 
+# 1.7 Histórico de conversa da IDE
+.deepcraft-chats/
+
 # ------------------------------------------------------------------
 # Índice
 #   1 IGNORADOS PELO GIT
@@ -42,4 +45,5 @@ documents/
 #     1.4 Sistema operacional
 #     1.5 Logs e temporários
 #     1.6 Documentos gerados
+#     1.7 Histórico de conversa da IDE
 # ------------------------------------------------------------------
