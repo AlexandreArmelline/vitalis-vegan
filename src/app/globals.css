@@ -1,0 +1,516 @@
+@import "tailwindcss";
+
+/* ==================================================================
+   1 DESIGN SYSTEM — VITALIS (estética cyberpunk + verde ácido)
+   1.1 Tokens de tema (cores, fontes, sombras)
+   1.2 Base global e tipografia
+   1.3 Texturas: grade, scanlines, ruído, glitch
+   1.4 Componentes reutilizáveis (botões, cards, chips)
+   1.5 Acessibilidade e movimento reduzido
+================================================================== */
+
+/* 1.1 Tokens de tema (cores, fontes, sombras) */
+@theme {
+  --color-void: #04070b;
+  --color-panel: #080d13;
+  --color-panel2: #0d141d;
+  --color-line: #1b2734;
+
+  --color-acid: #b8ff2f;
+  --color-acid-dim: #86c020;
+  --color-plasma: #ff2d95;
+  --color-volt: #22e6ff;
+  --color-orchid: #8b5cff;
+
+  --color-fog: #9fb0c2;
+  --color-bone: #e9f2ec;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-inter), sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  --shadow-neon: 0 0 0 1px rgba(184, 255, 47, 0.35), 0 0 30px -6px rgba(184, 255, 47, 0.5);
+  --shadow-plasma: 0 0 0 1px rgba(255, 45, 149, 0.35), 0 0 30px -6px rgba(255, 45, 149, 0.45);
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+}
+
+/* 1.2 Base global e tipografia */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Grade de fundo sutil em todo o site */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% -10%, rgba(184, 255, 47, 0.09), transparent 60%),
+      radial-gradient(ellipse 60% 45% at 90% 0%, rgba(255, 45, 149, 0.08), transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+    mask-image: radial-gradient(ellipse 120% 80% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: #05130a;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acid);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Barra de rolagem cyberpunk */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #060a0f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-acid-dim), #1d2a17);
+    border-radius: 99px;
+    border: 2px solid #060a0f;
+  }
+}
+
+/* 1.3 Texturas: grade, scanlines, ruído, glitch */
+@layer utilities {
+  .u-grid {
+    background-image:
+      linear-gradient(rgba(184, 255, 47, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184, 255, 47, 0.07) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  /* Scanlines de terminal */
+  .u-scanlines {
+    position: relative;
+  }
+  .u-scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.22) 3px,
+      rgba(0, 0, 0, 0) 4px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+  }
+
+  .u-noise {
+    position: relative;
+  }
+  .u-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Texto com brilho neon */
+  .u-neon {
+    color: var(--color-acid);
+    text-shadow: 0 0 12px rgba(184, 255, 47, 0.55), 0 0 48px rgba(184, 255, 47, 0.22);
+  }
+
+  .u-neon-plasma {
+    color: var(--color-plasma);
+    text-shadow: 0 0 12px rgba(255, 45, 149, 0.55), 0 0 42px rgba(255, 45, 149, 0.2);
+  }
+
+  /* Degradê de texto tricolor */
+  .u-gradient-text {
+    background: linear-gradient(96deg, #e9f2ec 0%, #b8ff2f 42%, #22e6ff 74%, #ff2d95 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Glitch com data-attribute (pseudo-elementos) */
+  .u-glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .u-glitch::before,
+  .u-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  .u-glitch::before {
+    color: var(--color-plasma);
+    transform: translate(-2px, 1px);
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    animation: glitch-a 4.5s steps(2, end) infinite;
+  }
+  .u-glitch::after {
+    color: var(--color-volt);
+    transform: translate(2px, -1px);
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    animation: glitch-b 3.7s steps(2, end) infinite;
+  }
+
+  @keyframes glitch-a {
+    0%, 92%, 100% { transform: translate(-1px, 0); opacity: 0.55; }
+    93% { transform: translate(-5px, -2px); opacity: 0.95; }
+    95% { transform: translate(3px, 1px); }
+    97% { transform: translate(-2px, 2px); }
+  }
+  @keyframes glitch-b {
+    0%, 90%, 100% { transform: translate(1px, 0); opacity: 0.5; }
+    91% { transform: translate(5px, 2px); opacity: 0.9; }
+    94% { transform: translate(-3px, -1px); }
+    98% { transform: translate(2px, -2px); }
+  }
+
+  /* Borda com gradiente cônico animado */
+  .u-border-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .u-border-glow::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      rgba(184, 255, 47, 0.9),
+      rgba(34, 230, 255, 0.55),
+      rgba(255, 45, 149, 0.75),
+      rgba(184, 255, 47, 0.9)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin-border 6s linear infinite;
+    z-index: -1;
+  }
+  @property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes spin-border {
+    to { --angle: 360deg; }
+  }
+
+  /* Revelação ao rolar */
+  .u-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: reveal-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 26%;
+  }
+  @keyframes reveal-up {
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Marquee horizontal */
+  .u-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 38s linear infinite;
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  .u-text-balance { text-wrap: balance; }
+  .u-hyphens { hyphens: auto; }
+}
+
+/* 1.4 Componentes reutilizáveis (botões, cards, chips) */
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-x { padding-inline: 2rem; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.4rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: transform 0.16s ease, box-shadow 0.24s ease, background-color 0.24s ease, color 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:active { transform: translateY(1px) scale(0.99); }
+
+  .btn-primary {
+    background: var(--color-acid);
+    color: #06140a;
+    box-shadow: 0 0 0 1px rgba(184, 255, 47, 0.6), 0 10px 34px -12px rgba(184, 255, 47, 0.85);
+  }
+  .btn-primary:hover {
+    background: #c8ff5c;
+    box-shadow: 0 0 0 1px rgba(200, 255, 92, 0.9), 0 14px 44px -10px rgba(184, 255, 47, 0.95);
+  }
+
+  .btn-ghost {
+    border-color: var(--color-line);
+    color: var(--color-bone);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(6px);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(184, 255, 47, 0.55);
+    color: var(--color-acid);
+    background: rgba(184, 255, 47, 0.06);
+  }
+
+  .btn-plasma {
+    background: linear-gradient(100deg, var(--color-plasma), #b3247a);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 45, 149, 0.5), 0 10px 34px -12px rgba(255, 45, 149, 0.8);
+  }
+  .btn-plasma:hover { filter: brightness(1.08); }
+
+  .card {
+    position: relative;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
+      rgba(8, 13, 19, 0.86);
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    border-color: rgba(184, 255, 47, 0.4);
+    box-shadow: 0 22px 60px -30px rgba(184, 255, 47, 0.55);
+  }
+
+  .card-lift:hover { transform: translateY(-4px); }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid rgba(184, 255, 47, 0.28);
+    color: var(--color-acid);
+    background: rgba(184, 255, 47, 0.07);
+  }
+  .chip-plasma {
+    border-color: rgba(255, 45, 149, 0.3);
+    color: #ff7ab8;
+    background: rgba(255, 45, 149, 0.08);
+  }
+  .chip-volt {
+    border-color: rgba(34, 230, 255, 0.3);
+    color: #7ae9ff;
+    background: rgba(34, 230, 255, 0.08);
+  }
+  .chip-mute {
+    border-color: var(--color-line);
+    color: var(--color-fog);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Rótulo de seção com barra luminosa */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-acid);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-acid));
+  }
+
+  /* Conteúdo de artigo (prose) */
+  .prose-blog {
+    font-size: 1.0625rem;
+    line-height: 1.78;
+    color: #cbd8d0;
+  }
+  .prose-blog > * + * { margin-top: 1.15em; }
+  .prose-blog h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--color-bone);
+    margin-top: 2.2em;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(184, 255, 47, 0.18);
+  }
+  .prose-blog h3 {
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    color: var(--color-acid);
+    margin-top: 1.8em;
+  }
+  .prose-blog strong { color: #fff; font-weight: 700; }
+  .prose-blog a { color: var(--color-volt); text-decoration: underline; }
+  .prose-blog a:hover { color: var(--color-acid); }
+  .prose-blog ul { list-style: none; padding-left: 0; }
+  .prose-blog ul > li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-top: 0.55em;
+  }
+  .prose-blog ul > li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--color-acid);
+    font-family: var(--font-mono);
+  }
+  .prose-blog ol { counter-reset: item; list-style: none; padding-left: 0; }
+  .prose-blog ol > li {
+    counter-increment: item;
+    position: relative;
+    padding-left: 2.2rem;
+    margin-top: 0.6em;
+  }
+  .prose-blog ol > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.12em;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-acid);
+    border: 1px solid rgba(184, 255, 47, 0.3);
+    border-radius: 3px;
+    padding: 0 0.25rem;
+  }
+  .prose-blog blockquote {
+    border-left: 2px solid var(--color-plasma);
+    padding: 0.4rem 0 0.4rem 1.1rem;
+    color: #d9e6de;
+    font-style: italic;
+    background: linear-gradient(90deg, rgba(255, 45, 149, 0.08), transparent);
+  }
+  .prose-blog code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: rgba(184, 255, 47, 0.1);
+    color: var(--color-acid);
+    padding: 0.12em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* Cartão de dado estatístico */
+  .stat-box {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    background: rgba(184, 255, 47, 0.04);
+    padding: 1rem 1.15rem;
+  }
+}
+
+/* 1.5 Acessibilidade e movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .u-reveal { opacity: 1; transform: none; }
+  .u-glitch::before,
+  .u-glitch::after { display: none; }
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--color-acid);
+  color: #06140a;
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border-radius: 0 0 6px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ==================================================================
+   ÍNDICE
+   1 DESIGN SYSTEM — VITALIS (estética cyberpunk + verde ácido)
+     1.1 Tokens de tema (cores, fontes, sombras)
+     1.2 Base global e tipografia
+     1.3 Texturas: grade, scanlines, ruído, glitch
+     1.4 Componentes reutilizáveis (botões, cards, chips)
+     1.5 Acessibilidade e movimento reduzido
+================================================================== */
