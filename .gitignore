@@ -1,0 +1,20 @@
+/* ------------------------------------------------------------------
+   1 IGNORADOS PELO GIT
+------------------------------------------------------------------ */
+node_modules/
+.next/
+out/
+build/
+dist/
+.env
+.env*.local
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+Thumbs.db
+documents/
+
+/* Índice
+   1 IGNORADOS PELO GIT
+*/
